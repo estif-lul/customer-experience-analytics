@@ -8,6 +8,26 @@ load_dotenv(override=True)
 print(os.getenv("ORACLE_DB_USER"))
 
 class OracleDBHandler:
+    """
+    OracleDBHandler is a class for managing Oracle database operations related to customer review analytics.
+    Attributes:
+        dsn (str): The Data Source Name for connecting to the Oracle database.
+        connection (oracledb.Connection): The Oracle database connection object.
+    Methods:
+        __init__():
+            Initializes the OracleDBHandler instance by setting up the database connection using environment variables.
+        create_bank_table(bank_name):
+            Creates a review table for the specified bank if it does not already exist.
+            The table includes columns for review details, sentiment analysis, and themes.
+            Args:
+                bank_name (str): The name of the bank to use as a prefix for the table name.
+        insert_data(bank_name):
+            Inserts review data from a CSV file into the corresponding bank's review table.
+            The CSV file should be located at 'data/{bank_name}_reviews_with_sentiment_and_themes.csv' and match the table structure.
+            Args:
+                bank_name (str): The name of the bank whose data is to be inserted.
+    """
+
     def __init__ (self):
         # Database connection details
         self.dsn = oracledb.makedsn(os.getenv("ORACLE_DB_HOST"), 
@@ -21,6 +41,15 @@ class OracleDBHandler:
 
 
     def create_bank_table(self, bank_name):
+        """        Creates a review table for the specified bank if it does not already exist.
+        The table includes columns for review details, sentiment analysis, and themes.
+        Parameters:
+            bank_name (str): The name of the bank to use as a prefix for the table name.
+            
+        Raises:
+            oracledb.DatabaseError: If there is an error executing the SQL command.
+            Exception: For any other unexpected errors.
+        """
         try:
             # Create a cursor object
             cursor = self.connection.cursor()
@@ -57,6 +86,15 @@ class OracleDBHandler:
             cursor.close()
 
     def insert_data(self, bank_name):
+        """Inserts review data from a CSV file into the corresponding bank's review table.
+        The CSV file should be located at 'data/{bank_name}_reviews_with_sentiment_and_themes.csv' and match the table structure.
+        Parameters:
+            bank_name (str): The name of the bank whose data is to be inserted. 
+            
+        Raises:
+            FileNotFoundError: If the specified CSV file does not exist.
+            oracledb.DatabaseError: If there is an error executing the SQL command.
+            Exception: For any other unexpected errors."""
         try:
             cursor = self.connection.cursor()
             with open(f"data/{bank_name}_reviews_with_sentiment_and_themes.csv",
@@ -65,7 +103,6 @@ class OracleDBHandler:
                 next(reader)
                 for row in reader:
                     # Assuming the CSV columns match the table structure
-                    print(row)
                     cursor.execute(f"""
                     INSERT INTO {bank_name}_review (
                         review_text, rating, review_date, bank_name, source,
@@ -90,7 +127,9 @@ class OracleDBHandler:
 
 if __name__ == "__main__":
     bank_names = ["cbe", "boa", "dashen"]
-    # Example usage
+    # Initialize the OracleDBHandler
+    # This will create the connection to the Oracle database
+    print("Connecting to Oracle Database...")
     db_handler = OracleDBHandler()
     for bank in bank_names:
         db_handler.create_bank_table(bank)
