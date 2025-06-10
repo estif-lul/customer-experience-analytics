@@ -134,3 +134,4 @@ if __name__ == "__main__":
     for bank in bank_names:
         db_handler.create_bank_table(bank)
         db_handler.insert_data(bank)
+    db_handler.connection.close()
