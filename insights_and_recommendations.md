@@ -64,14 +64,14 @@ Your identified themes—**Performance Issues, Authentication Problems, User Int
 
 - **Sentiment Count Per Rating:**  
     Confirms low ratings often correlate with negative sentiment, especially for BOA.
-    ![alt text](image.png)!
+    ![alt text](screenshots/image.png)!
 - **Word Cloud for Top Keywords:**  
     Highlights dominant concerns (bugs, authentication, performance), reinforcing thematic conclusions.
-    ![alt text](image-3.png)
+    ![alt text](screenshots/image-3.png)
 
 - **Rating Distribution Per Bank:**  
     Shows BOA struggles more with dissatisfaction compared to CBE and Dashen.
-![alt text](image-5.png)
+![alt text](screenshots/image-5.png)
 > These visualizations support the need for targeted improvements, especially around app reliability and performance.
 
 ---
